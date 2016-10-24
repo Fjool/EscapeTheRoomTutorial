@@ -8,8 +8,6 @@
 // Sets default values for this component's properties
 UGrabbastic::UGrabbastic()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
 }
@@ -58,12 +56,10 @@ void UGrabbastic::SetupInputComponent()
 
 void UGrabbastic::Grab()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Grab!!"))
-
 	/// LINE TRACE and see if we reach any actors with physics body collision channel set
-	auto HitResult = GetFirstPhysicsBodyInReach();
+	auto HitResult		 = GetFirstPhysicsBodyInReach();
 	auto ComponentToGrab = HitResult.GetComponent();
-	auto ActorHit = HitResult.GetActor();
+	auto ActorHit		 = HitResult.GetActor();
 
 	/// If we hit something then attach a physics handle
 	if (ActorHit)
@@ -80,9 +76,6 @@ void UGrabbastic::Grab()
 
 void UGrabbastic::Release()
 {
-	UE_LOG(LogTemp, Warning, TEXT("And release..."))
-
-	// Release physics handle
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -104,10 +97,8 @@ void UGrabbastic::TickComponent( float DeltaTime, ELevelTick TickType, FActorCom
 			OUT PlayerViewpointRotation
 		);
 
-		FVector LineTraceEnd = PlayerViewpointLocation + PlayerViewpointRotation.Vector() * Reach;
-
 		///	move the object that we're holding
-		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+		PhysicsHandle->SetTargetLocation(FVector(PlayerViewpointLocation + PlayerViewpointRotation.Vector() * Reach));
 	}
 }
 
