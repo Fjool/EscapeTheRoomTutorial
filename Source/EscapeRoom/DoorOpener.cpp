@@ -20,21 +20,16 @@ UDoorOpener::UDoorOpener()
 void UDoorOpener::BeginPlay()
 {
 	Super::BeginPlay();
-
 	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();	
-	Owner = GetOwner();
 }
 
-void UDoorOpener::OpenDoor()
+void UDoorOpener::SetDoorAngle(float NewAngle)
 {
-	Owner->SetActorRotation(FRotator(0.f, Angle, 0.f));
+	GetOwner()->SetActorRotation(FRotator(0.f, NewAngle, 0.f));
 }
 
-void UDoorOpener::CloseDoor()
-{
-	FRotator NewRotation = FRotator(0.f, 0.f, 0.f);
-	Owner->SetActorRotation(NewRotation);
-}
+void UDoorOpener::OpenDoor( ) {	SetDoorAngle(Angle); }
+void UDoorOpener::CloseDoor() {	SetDoorAngle(  0.f); }
 
 // Called every frame
 void UDoorOpener::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )

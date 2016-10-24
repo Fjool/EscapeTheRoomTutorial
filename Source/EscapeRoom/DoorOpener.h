@@ -24,6 +24,9 @@ public:
 
 protected:
 
+	// Set the Angle of the door
+	void SetDoorAngle(float NewAngle);
+
 	// Angle to which the door opens
 	UPROPERTY(EditAnywhere)
 	float Angle = 90.f;
@@ -39,6 +42,4 @@ protected:
 
 	// Actor that causes this plate to trigger
 	AActor *ActorThatOpens;
-
-	AActor *Owner;
 };
