@@ -3,6 +3,7 @@
 #include "EscapeRoom.h"
 #include "DoorOpener.h"
 
+#define OUT
 
 // Sets default values for this component's properties
 UDoorOpener::UDoorOpener()
@@ -20,7 +21,6 @@ UDoorOpener::UDoorOpener()
 void UDoorOpener::BeginPlay()
 {
 	Super::BeginPlay();
-	ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();	
 }
 
 void UDoorOpener::SetDoorAngle(float NewAngle)
@@ -31,13 +31,32 @@ void UDoorOpener::SetDoorAngle(float NewAngle)
 void UDoorOpener::OpenDoor( ) {	SetDoorAngle(Angle); }
 void UDoorOpener::CloseDoor() {	SetDoorAngle(  0.f); }
 
+float UDoorOpener::GetTotalMassOfActorsOnPlate()
+{
+	float TotalMass = 0.f;
+
+	// find all the overlapping actors
+	TArray<AActor*> OverlappingActors;
+	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
+
+	// iterate through them adding their masses
+	for (const auto& Actor : OverlappingActors)
+	{		
+		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+
+		UE_LOG(LogTemp, Warning, TEXT("Component %s overlaps"), *Actor->GetName())
+	}
+
+	return TotalMass;
+}
+
 // Called every frame
 void UDoorOpener::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 	
 	// poll the pressure plate
-	if (PressurePlate->IsOverlappingActor(ActorThatOpens))
+	if (GetTotalMassOfActorsOnPlate() >= TriggerMass) // TODO make into parameter
 	{
 		OpenDoor();
 		LastDoorOpenTime = GetWorld()->GetTimeSeconds();

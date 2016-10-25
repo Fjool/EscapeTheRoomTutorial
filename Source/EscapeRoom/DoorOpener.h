@@ -23,7 +23,8 @@ public:
 	void CloseDoor();
 
 protected:
-
+	
+private:
 	// Set the Angle of the door
 	void SetDoorAngle(float NewAngle);
 
@@ -38,8 +39,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float DoorCloseDelay = 1.f;
 
+	UPROPERTY(EditAnywhere)
+	float TriggerMass = 40.f;
+
 	float LastDoorOpenTime;
 
-	// Actor that causes this plate to trigger
-	AActor *ActorThatOpens;
+	// returns total mass of actors in Kg
+	float GetTotalMassOfActorsOnPlate();
+
 };
