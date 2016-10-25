@@ -22,7 +22,11 @@ public:
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
 private:
-	float Reach = 100.f;
+	/// player viewpoint
+	FVector  PlayerViewpointLocation;
+	FRotator PlayerViewpointRotation;
+
+	float Reach = 200.f;
 	
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent*		InputComponent = nullptr;
@@ -32,7 +36,6 @@ private:
 
 	// Call when grab is released
 	void Release();
-
 	
 	void FindPhysicsHandleComponent();
 
@@ -41,4 +44,16 @@ private:
 
 	// Return hit for first physics body in reach
 	const FHitResult GetFirstPhysicsBodyInReach();
+
+	// Populate viewpoint location and rotation variables
+	void GetPlayerViewpoint();
+
+	// Where is the player looking? Affected by range.
+	FVector GetPlayerTargetLocation();
+
+	// Returns start of current reach line
+	FVector GetReachLineStart();
+
+	// Returns end of current reach line
+	FVector GetReachLineEnd();
 };
