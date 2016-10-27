@@ -21,6 +21,11 @@ UDoorOpener::UDoorOpener()
 void UDoorOpener::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (PressurePlate == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Pressure Plate not assigned to %s"), *GetOwner()->GetName())
+	}
 }
 
 void UDoorOpener::SetDoorAngle(float NewAngle)
@@ -35,18 +40,21 @@ float UDoorOpener::GetTotalMassOfActorsOnPlate()
 {
 	float TotalMass = 0.f;
 
-	// find all the overlapping actors
-	TArray<AActor*> OverlappingActors;
-	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
+	if (PressurePlate)
+	{
+		// find all the overlapping actors
+		TArray<AActor*> OverlappingActors;
 
-	// iterate through them adding their masses
-	for (const auto& Actor : OverlappingActors)
-	{		
-		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+		PressurePlate->GetOverlappingActors(OUT OverlappingActors);
 
-		UE_LOG(LogTemp, Warning, TEXT("Component %s overlaps"), *Actor->GetName())
+		// iterate through them adding their masses
+		for (const auto& Actor : OverlappingActors)
+		{		
+			TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+
+			UE_LOG(LogTemp, Warning, TEXT("Component %s overlaps"), *Actor->GetName())
+		}
 	}
-
 	return TotalMass;
 }
 

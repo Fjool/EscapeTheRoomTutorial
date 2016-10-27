@@ -34,7 +34,7 @@ private:
 
 	// Trigger volume which causes this door to open
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume *PressurePlate;
+	ATriggerVolume *PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	float DoorCloseDelay = 1.f;
