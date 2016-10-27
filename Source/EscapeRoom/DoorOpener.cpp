@@ -28,14 +28,6 @@ void UDoorOpener::BeginPlay()
 	}
 }
 
-void UDoorOpener::SetDoorAngle(float NewAngle)
-{
-	GetOwner()->SetActorRotation(FRotator(0.f, NewAngle, 0.f));
-}
-
-void UDoorOpener::OpenDoor( ) {	SetDoorAngle(Angle); }
-void UDoorOpener::CloseDoor() {	SetDoorAngle(  0.f); }
-
 float UDoorOpener::GetTotalMassOfActorsOnPlate()
 {
 	float TotalMass = 0.f;
@@ -51,8 +43,6 @@ float UDoorOpener::GetTotalMassOfActorsOnPlate()
 		for (const auto& Actor : OverlappingActors)
 		{		
 			TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
-
-			UE_LOG(LogTemp, Warning, TEXT("Component %s overlaps"), *Actor->GetName())
 		}
 	}
 	return TotalMass;
@@ -64,16 +54,11 @@ void UDoorOpener::TickComponent( float DeltaTime, ELevelTick TickType, FActorCom
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 	
 	// poll the pressure plate
-	if (GetTotalMassOfActorsOnPlate() >= TriggerMass) // TODO make into parameter
-	{
-		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
+	if (GetTotalMassOfActorsOnPlate() >= TriggerMass)
+	{	OnOpen.Broadcast();
 	}
-
-	// is it time to close the door?
-	if (GetWorld()->GetTimeSeconds() - LastDoorOpenTime > DoorCloseDelay)
-	{
-		CloseDoor();
+	else
+	{	OnClose.Broadcast();
 	}
 }
 
